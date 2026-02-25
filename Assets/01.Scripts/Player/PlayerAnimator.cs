@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerAnimator : MonoBehaviour
 {
-    [SerializeField] private PlayerBlackboard blackboard;
+    [SerializeField] private PlayerState playerState;
     private Animator anim;
 
     private void Awake()
@@ -18,74 +18,108 @@ public class PlayerAnimator : MonoBehaviour
         UpdateActions();
         UpdateComboTimer();
 
-        anim.SetBool("IsGrounded", blackboard.IsGrounded);
-        anim.SetBool("IsRolling", blackboard.IsRolling);
+        UpdateStateParams();
+    }
+
+    private void UpdateStateParams()
+    {
+        anim.SetBool("IsGrounded", playerState.IsGrounded);
+        anim.SetBool("IsRolling", playerState.IsRolling);
     }
 
     private void UpdateMove()
     {
-        float speed = Mathf.Abs(blackboard.MoveInput.x);
-        speed = speed > 0.01f ? (blackboard.MovePressed ? 1.5f : 1f) : 0f;
+        float speed = Mathf.Abs(playerState.MoveInput.x);
+        speed = speed > 0.01f ? (playerState.MovePressed ? 1.5f : 1f) : 0f;
         anim.SetFloat("Speed", speed);
     }
 
     private void UpdateFlip()
     {
-        if (blackboard.MoveInput.x > 0.01f)
+        if (playerState.MoveInput.x > 0.01f)
         {
             transform.localScale = Vector3.one;
-            blackboard.FacingDir = 1;
+            playerState.FacingDir = 1;
         }
-        else if (blackboard.MoveInput.x < -0.01f)
+        else if (playerState.MoveInput.x < -0.01f)
         {
             transform.localScale = new Vector3(-1f, 1f, 1f);
-            blackboard.FacingDir = -1;
+            playerState.FacingDir = -1;
         }
     }
 
     private void UpdateActions()
     {
-        if (blackboard.JumpPressed)
+        UpdateJump();
+        UpdateRoll();
+        UpdateAttack();
+        UpdateGuard();
+    }
+
+    private void UpdateJump()
+    {
+        if (!playerState.JumpPressed)
         {
-            anim.SetTrigger("Jump");
-            blackboard.JumpPressed = false;
+            return;
         }
 
-        if (blackboard.RollPressed)
+        anim.SetTrigger("Jump");
+    }
+
+    private void UpdateRoll()
+    {
+        if (!(playerState.RollPressed && playerState.CanRoll))
         {
-            anim.SetTrigger("Roll");
-            blackboard.RollPressed = false;
+            return;
         }
 
-        if (blackboard.AttackPressed)
+        anim.SetTrigger("Roll");
+    }
+
+    private void UpdateAttack()
+    {
+        if (!playerState.AttackPressed)
         {
-            if (blackboard.ComboStep < 3)
+            return;
+        }
+
+        if (playerState.ComboStep < 3)
+        {
+            playerState.ComboStep++;
+
+            switch (playerState.ComboStep)
             {
-                blackboard.ComboStep++;
-                switch (blackboard.ComboStep)
-                {
-                    case 1: anim.SetTrigger("Attack1"); break;
-                    case 2: anim.SetTrigger("Attack2"); break;
-                    case 3: anim.SetTrigger("Attack3"); break;
-                }
-                blackboard.ComboTimer = blackboard.ComboDuration;
+                case 1:
+                    anim.SetTrigger("Attack1");
+                    break;
+                case 2:
+                    anim.SetTrigger("Attack2");
+                    break;
+                case 3:
+                    anim.SetTrigger("Attack3");
+                    break;
             }
-            blackboard.AttackPressed = false;
+
+            playerState.ComboTimer = playerState.ComboDuration;
+        }
+    }
+
+    private void UpdateGuard()
+    {
+        if (!(playerState.GuardPressed && playerState.CanGuard))
+        {
+            return;
         }
 
-        if (blackboard.GuardPressed)
-        {
-            anim.SetTrigger("Guard");
-            blackboard.GuardPressed = false;
-        }
+        anim.SetTrigger("Guard");
     }
 
     private void UpdateComboTimer()
     {
-        if (blackboard.ComboStep > 0)
+        if (playerState.ComboStep > 0)
         {
-            blackboard.ComboTimer -= Time.deltaTime;
-            if (blackboard.ComboTimer <= 0f) blackboard.ComboStep = 0;
+            playerState.ComboTimer -= Time.deltaTime;
+            if (playerState.ComboTimer <= 0f) playerState.ComboStep = 0;
         }
     }
 }

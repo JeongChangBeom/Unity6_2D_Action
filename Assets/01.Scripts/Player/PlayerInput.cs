@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class PlayerInputReader : MonoBehaviour
+public class PlayerInput : MonoBehaviour
 {
-    public PlayerBlackboard bb;
+    public PlayerState bb;
     public PlayerInputActions input;
 
     void Awake()

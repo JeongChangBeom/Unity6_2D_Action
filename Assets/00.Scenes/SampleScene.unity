@@ -657,6 +657,10 @@ MonoBehaviour:
   ComboStep: 0
   ComboTimer: 0
   ComboDuration: 0.5
+  IsGrounded: 1
+  IsRolling: 0
+  CanRoll: 1
+  IsGuarding: 0
 --- !u!70 &2107582568
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -733,11 +737,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d85bc397a134d4a919bcc2770acec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackboard: {fileID: 2107582567}
+  playerState: {fileID: 2107582567}
   moveSpeed: 5
   jumpForce: 12
   rollForce: 12
   rollDuration: 0.25
+  rollCooldown: 2
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackBoxSize: {x: 1.2, y: 0.8}
+  attackOffset: {x: 0.8, y: 0.4}
+  guardBoxSize: {x: 1.4, y: 1}
+  guardOffset: {x: 0.6, y: 0.5}
+  guardDuration: 0.5
+  guardCooldown: 0.7
 --- !u!114 &2107582571
 MonoBehaviour:
   m_ObjectHideFlags: 0
