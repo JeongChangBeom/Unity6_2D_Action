@@ -597,7 +597,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 796d364a159cc9041a5d633b03f45119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackboard: {fileID: 2107582567}
+  playerState: {fileID: 2107582567}
 --- !u!1 &2107582565
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,17 +650,18 @@ MonoBehaviour:
   MoveInput: {x: 0, y: 0}
   MovePressed: 0
   JumpPressed: 0
+  IsGrounded: 1
   AttackPressed: 0
-  RollPressed: 0
-  GuardPressed: 0
-  FacingDir: 1
   ComboStep: 0
   ComboTimer: 0
   ComboDuration: 0.5
-  IsGrounded: 1
+  RollPressed: 0
   IsRolling: 0
   CanRoll: 1
+  GuardPressed: 0
   IsGuarding: 0
+  CanGuard: 1
+  FacingDir: 1
 --- !u!70 &2107582568
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -746,10 +747,10 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 0
-  attackBoxSize: {x: 1.2, y: 0.8}
-  attackOffset: {x: 0.8, y: 0.4}
-  guardBoxSize: {x: 1.4, y: 1}
-  guardOffset: {x: 0.6, y: 0.5}
+  attackBoxSize: {x: 2, y: 1.5}
+  attackOffset: {x: 0.5, y: 0.4}
+  guardBoxSize: {x: 1.3, y: 1.3}
+  guardOffset: {x: 0, y: 0.1}
   guardDuration: 0.5
   guardCooldown: 0.7
 --- !u!114 &2107582571
